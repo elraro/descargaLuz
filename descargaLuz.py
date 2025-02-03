@@ -2,12 +2,11 @@ import urllib.request
 import urllib.error
 import json
 
-year = 2014
-month = 4
+year = 2024
+month = 1
 
 url_str = "https://api.esios.ree.es/archives/70/download_json?locale=es&date="
-line_gen = ""
-line_noc = ""
+line_pcb = ""
 
 while True:
     for i in range(1, 32):
@@ -19,21 +18,15 @@ while True:
             with urllib.request.urlopen(url_str_tmp) as url:
                 data = json.loads(url.read().decode())
                 for hour in data["PVPC"]:
-                    line_gen += str(float(hour["GEN"].replace(",", ".")) / 1000) + ";"
-                    line_noc += str(float(hour["NOC"].replace(",", ".")) / 1000) + ";"
-                line_gen += "\n"
-                line_noc += "\n"
+                    line_pcb += str(float(hour["PCB"].replace(",", ".")) / 1000) + ";"
+                line_pcb += "\n"
             print("Readed day " + str(i) + " of month " + str(month) + " of year " + str(year))
         except urllib.error.HTTPError as err:
             continue
-    text_file_gen = open(str(year) + "-" + str(month) + "-GEN.csv", "w")
-    text_file_gen.write(line_gen)
-    text_file_gen.close()
-    text_file_noc = open(str(year) + "-" + str(month) + "-NOC.csv", "w")
-    text_file_noc.write(line_noc)
-    text_file_noc.close()
-    line_gen = ""
-    line_noc = ""
+    text_file_pcb = open(str(year) + "-" + str(month) + "-PCB.csv", "w")
+    text_file_pcb.write(line_pcb)
+    text_file_pcb.close()
+    line_pcb = ""
     month += 1
     if month == 13:
         year += 1
